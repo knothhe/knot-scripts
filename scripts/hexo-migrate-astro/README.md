@@ -13,6 +13,13 @@ This repository contains tools for migrating blog posts from Hexo to Astro forma
 - Removes `<!-- more -->` tags
 - Preserves directory structure
 
+#### Usage:
+1. Place your Hexo blog posts in the `input` directory
+2. Run the script:
+```bash
+python convert_markdown-hexo-to-astro.py
+```
+
 ## 2. Routes Generator (`generate_routes.py`)
 
 ### Features:
