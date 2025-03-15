@@ -2,6 +2,18 @@
 
 # Prompt the user to enter the domain to configure
 read -p "Enter the domain to configure: " domain
+# Domain validation section
+if [[ -z "$domain" || ! "$domain" =~ \.. ]]; then
+    echo "Error: Domain cannot be empty and must contain a valid domain (e.g. example.com)"
+    exit 1
+fi
+
+read -p "Enter the proxy port:" port
+# Port validation section
+if ! [[ -z "$port" || "$port" =~ ^[0-9]+$ ]] || ((port < 1 || port > 65535)); then
+    echo "Error: Port must be a number between 1 and 65535"
+    exit 1
+fi
 
 # Set the paths for the Nginx configuration file and ssl-params
 NGINX_CONFIG_FILE="/etc/nginx/sites-available/$domain"
@@ -73,7 +85,7 @@ server {
     include /etc/nginx/snippets/ssl-params.conf;
 
     location / {
-        proxy_pass http://localhost:9090;
+        proxy_pass http://localhost:$port;  # Use the validated port variable
         proxy_set_header Host \$host;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
