@@ -99,6 +99,10 @@ if [ $? -ne 0 ]; then
 fi
 echo "Nginx configuration file $NGINX_CONFIG_FILE  created!"
 
+# Create a symbolic link and delete the default configuration
+sudo ln -sf "$NGINX_CONFIG_FILE" /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+
 # Check if Certbot is installed
 if ! command -v certbot &> /dev/null
 then
@@ -122,10 +126,6 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "SSL certificates acquired successfully!"
-
-# Create a symbolic link and delete the default configuration
-sudo ln -sf "$NGINX_CONFIG_FILE" /etc/nginx/sites-enabled/
-sudo rm -f /etc/nginx/sites-enabled/default
 
 # Test Nginx configuration and reload
 echo "Testing Nginx configuration..."
