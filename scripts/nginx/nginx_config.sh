@@ -79,9 +79,6 @@ server {
     listen [::]:443 ssl http2;
     server_name $domain;
 
-    ssl_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/$domain/privkey.pem;
-
     include /etc/nginx/snippets/ssl-params.conf;
 
     location / {
