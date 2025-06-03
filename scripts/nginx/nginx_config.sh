@@ -1,5 +1,30 @@
 #!/bin/bash
 
+is_debian_based() {
+    # check package manager
+    if ! command -v apt-get &>/dev/null; then
+        return 1
+    fi
+
+    # check os release ID
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        [[ "$ID" == debian || "$ID_LIKE" == *debian* ]]
+        return $?
+    fi
+
+    # check Debian version file
+    if [ -f /etc/debian_version ]; then
+        return 0
+    fi
+
+    return 1
+}
+
+if ! is_debian_based; then
+    echo "System is NOT Debian-based"
+fi
+
 # Prompt the user to enter the domain to configure
 read -p "Enter the domain to configure: " domain
 # Domain validation section
@@ -20,7 +45,7 @@ NGINX_CONFIG_FILE="/etc/nginx/sites-available/$domain"
 NGINX_SSL_PARAMS="/etc/nginx/snippets/ssl-params.conf"
 
 # Check if Nginx is installed
-if ! command -v nginx &> /dev/null
+if ! dpkg -l nginx &> /dev/null
 then
     echo "Nginx is not installed. Starting installation..."
     sudo apt update && sudo apt install -y nginx
